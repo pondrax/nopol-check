@@ -10,7 +10,7 @@ app.get('/', async(req, res) => {
     const data = await checkNopol(req.query.nopol); // example async function
     res.send(data);
   } catch (error) {
-    // console.error(error);
+    console.error(error);
     res.sendStatus(500);
   }
   // const result = await checkNopol('W 3240 LC');

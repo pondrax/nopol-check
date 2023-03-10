@@ -31,26 +31,6 @@ export async function checkNopol(nopol) {
     return String(res.data.text).replace('\n', '');
   }
 
-  fetch("https://info.dipendajatim.go.id/logic_pkb.php?act=cek", {
-    "headers": {
-      "accept": "*/*",
-      "accept-language": "id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7",
-      "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
-      "sec-ch-ua": "\"Chromium\";v=\"110\", \"Not A(Brand\";v=\"24\", \"Google Chrome\";v=\"110\"",
-      "sec-ch-ua-mobile": "?0",
-      "sec-ch-ua-platform": "\"Windows\"",
-      "sec-fetch-dest": "empty",
-      "sec-fetch-mode": "cors",
-      "sec-fetch-site": "same-origin",
-      "x-requested-with": "XMLHttpRequest",
-      "cookie": "PHPSESSID=1aaon6jngqg63qgcvpg4581lc5",
-      "Referer": "https://info.dipendajatim.go.id/index.php?page=info_pkb",
-      "Referrer-Policy": "same-origin"
-    },
-    "body": "nopol=w+3240+lc&code=XcSW2",
-    "method": "POST"
-  });
-
   async function check(props) {
     console.log('Checking', props)
     const { body } = await request("https://info.dipendajatim.go.id/logic_pkb.php?act=cek", {
