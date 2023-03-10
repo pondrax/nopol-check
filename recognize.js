@@ -4,7 +4,6 @@ import { request } from 'undici'
 
 export async function checkNopol(nopol) {
   async function saveImage(url, cookie) {
-    // console.log(url)
     const { body } = await request(url, {
       headers: {
         cookie
@@ -12,7 +11,6 @@ export async function checkNopol(nopol) {
     });
     const buffer = await body.arrayBuffer();
     return buffer;
-    // fs.writeFileSync('image.png', Buffer.from(buffer));
   }
 
   async function getCaptcha() {
@@ -26,7 +24,6 @@ export async function checkNopol(nopol) {
   async function recognize(buffer) {
     const res = await Tesseract.recognize(
       buffer,
-      // 'image.png',
       'eng',
       // { logger: m => console.log(m) }
     )

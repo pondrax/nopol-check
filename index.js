@@ -1,31 +1,26 @@
 import express from 'express'
 import { checkNopol } from './recognize.js';
-// Create a new express application
+
 const app = express();
 
 // Define a route handler for the default home page
-app.get('/', async(req, res) => {
+app.get('/', async (req, res) => {
   res.send(`
     <form action="/api">
       <input name="nopol" placeholder="Nomor Kendaraan">
       <button>Cek</button>
     </form>
   `)
-  
 });
 
-// Define a route handler for the default home page
-app.get('/api', async(req, res) => {
+app.get('/api', async (req, res) => {
   try {
-    // const data ='test'
     const data = await checkNopol(req.query.nopol); // example async function
     res.send(data);
   } catch (error) {
     console.error(error);
-    res.sendStatus(500);
+    res.send({ success: false, message: 'try again' });
   }
-  // const result = await checkNopol('W 3240 LC');
-  // res.send(result);
 });
 
 // Start the server on port 3000
