@@ -58,7 +58,6 @@ export async function checkNopol(nopol) {
   }
   const { cookie, buffer } = await getCaptcha();
   const code = await recognize(buffer);
-  // const nopol = 'w 3240 lc';
 
   const result = JSON.parse(await check({ cookie, nopol, code }))
   if (result.msg) {
@@ -72,13 +71,10 @@ export async function checkNopol(nopol) {
     const key = el.firstChild.innerText.toLowerCase().replace(/\s|\//g, '_')
     const value = el.lastChild.innerText
     res[key] = value
-    // console.log(key, value)
   })
   return {
     succes: true,
+    copyright:'Drax @2023',
     result: res
   };
 }
-
-// const result = await checkNopol('W 3240 LC')
-// console.log(result)
