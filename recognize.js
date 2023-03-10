@@ -11,20 +11,22 @@ export async function checkNopol(nopol) {
       }
     });
     const buffer = await body.arrayBuffer();
-    fs.writeFileSync('image.png', Buffer.from(buffer));
+    return buffer;
+    // fs.writeFileSync('image.png', Buffer.from(buffer));
   }
 
   async function getCaptcha() {
     const { body, headers } = await request(`https://info.dipendajatim.go.id/logic_pkb.php?act=captcha`)
     const imgUrl = 'https://info.dipendajatim.go.id' + (await body.text()).match(/src="([^"]*)"/)[1]
     const cookie = (headers['set-cookie'])
-    await saveImage(imgUrl, cookie)
-    return cookie
+    const buffer = await saveImage(imgUrl, cookie)
+    return {cookie,buffer}
   }
 
-  async function recognize() {
+  async function recognize(buffer) {
     const res = await Tesseract.recognize(
-      'image.png',
+      buffer,
+      // 'image.png',
       'eng',
       // { logger: m => console.log(m) }
     )
@@ -54,8 +56,8 @@ export async function checkNopol(nopol) {
     });
     return await body.text();
   }
-  const cookie = await getCaptcha();
-  const code = await recognize();
+  const {cookie,buffer} = await getCaptcha();
+  const code = await recognize(buffer);
   // const nopol = 'w 3240 lc';
 
   const result = JSON.parse(await check({ cookie, nopol, code }))
