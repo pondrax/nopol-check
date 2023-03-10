@@ -1,5 +1,5 @@
 import Tesseract from 'tesseract.js';
-import fs from 'fs'
+import { parse } from 'node-html-parser'
 import { request } from 'undici'
 
 export async function checkNopol(nopol) {
@@ -20,7 +20,7 @@ export async function checkNopol(nopol) {
     const imgUrl = 'https://info.dipendajatim.go.id' + (await body.text()).match(/src="([^"]*)"/)[1]
     const cookie = (headers['set-cookie'])
     const buffer = await saveImage(imgUrl, cookie)
-    return {cookie,buffer}
+    return { cookie, buffer }
   }
 
   async function recognize(buffer) {
@@ -56,15 +56,28 @@ export async function checkNopol(nopol) {
     });
     return await body.text();
   }
-  const {cookie,buffer} = await getCaptcha();
+  const { cookie, buffer } = await getCaptcha();
   const code = await recognize(buffer);
   // const nopol = 'w 3240 lc';
 
   const result = JSON.parse(await check({ cookie, nopol, code }))
-  if(result.msg){
+  if (result.msg) {
     return checkNopol(nopol)
   }
-  return result.html
+
+  const dom = parse(result.html);
+
+  let res = {};
+  dom.querySelectorAll('tr').map(el => {
+    const key = el.firstChild.innerText.toLowerCase().replace(/\s|\//g, '_')
+    const value = el.lastChild.innerText
+    res[key] = value
+    // console.log(key, value)
+  })
+  return {
+    succes: true,
+    result: res
+  };
 }
 
 // const result = await checkNopol('W 3240 LC')
